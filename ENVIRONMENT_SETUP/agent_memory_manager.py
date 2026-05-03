@@ -92,7 +92,8 @@ def do_sync():
             content = f.read()
 
         # Call the remote MCP server to save this memory under the repo's specific memory file
-        subprocess.run([sys.executable, bridge_script, 'execute_bash', f"mkdir -p ~/Jules_mx/memory_offload && cat << 'INNER_EOF' > ~/Jules_mx/memory_offload/backup_{repo_name}.jsonl\n{content}\nINNER_EOF"], check=False)
+        arg_json = json.dumps({"command": f"mkdir -p ~/Jules_mx/memory_offload && cat << 'INNER_EOF' > ~/Jules_mx/memory_offload/backup_{repo_name}.jsonl\n{content}\nINNER_EOF"})
+        subprocess.run([sys.executable, bridge_script, "--tool", "execute_bash", "--args", arg_json], check=False)
         print('✅ Lokális memória sikeresen felszinkronizálva a VPS-re.')
     except Exception as e:
         print(f'⚠️ Hiba a memória szinkronizációjakor: {e}')
